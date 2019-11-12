@@ -18,29 +18,48 @@
     <script src="three.min.js"></script>
     <script>
         var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+        var camera = new THREE.PerspectiveCamera(400, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-        var x = document.createElement("canvas");
-        var xc = x.getContext("2d");
-        x.width = x.height = 128;
-        xc.shadowColor = "#000";
-        xc.shadowBlur = 7;
-        xc.fillStyle = "orange";
-        xc.font = "30pt arial bold";
-        xc.fillText('Test', 10, 64);
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-        var xm = new THREE.MeshBasicMaterial({ map: new THREE.Texture(x), transparent: true });
-        xm.map.needsUpdate = true;
+       
+				var loader = new THREE.FontLoader();
+				loader.load( 'Lato_Black_Regular.json', function ( font ) {
+					var xMid, text;
+					var color = 0x006699;
+					var matDark = new THREE.LineBasicMaterial( {
+						color: color,
+						side: THREE.DoubleSide
+					} );
+					var matLite = new THREE.MeshBasicMaterial( {
+						color: color,
+						transparent: true,
+						opacity: 0.9,
+						side: THREE.DoubleSide
+					} );
+					var message = "   Three.js\nSimple text.";
+					var shapes = font.generateShapes( message, 10 );
+					var geometry = new THREE.ShapeBufferGeometry( shapes );
+					geometry.computeBoundingBox();
+					xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+					geometry.translate( xMid, 0, 0 );
+					// make shape ( N.B. edge view not visible )
+					text = new THREE.Mesh( geometry, matLite );
+					text.position.z = - 150;
+					scene.add( text );
+	
+				} ); 
 
-        var mesh = new THREE.Mesh(new THREE.CubeGeometry(150, 150, 150), xm);
-        mesh.position.x = -400;
-        mesh.position.y = 0;
-        mesh.position.z = 0;
-        mesh.doubleSided = true;
-        scene.add(mesh);
         camera.position.z = 5;
 
+        var animate = function () {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        };
 
+        animate();
     </script>
 </body>
 
