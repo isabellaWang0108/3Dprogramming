@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <title>My first three.js app</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+    </style>
+</head>
+
+<body>
+    <script src="three.min.js"></script>
+    <script>
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        var x = document.createElement("canvas");
+        var xc = x.getContext("2d");
+        x.width = x.height = 128;
+        xc.shadowColor = "#000";
+        xc.shadowBlur = 7;
+        xc.fillStyle = "orange";
+        xc.font = "30pt arial bold";
+        xc.fillText('Test', 10, 64);
+
+        var xm = new THREE.MeshBasicMaterial({ map: new THREE.Texture(x), transparent: true });
+        xm.map.needsUpdate = true;
+
+        var mesh = new THREE.Mesh(new THREE.CubeGeometry(150, 150, 150), xm);
+        mesh.position.x = -400;
+        mesh.position.y = 0;
+        mesh.position.z = 0;
+        mesh.doubleSided = true;
+        scene.add(mesh);
+        camera.position.z = 5;
+
+
+    </script>
+</body>
+
+</html>
