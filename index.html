@@ -130,10 +130,6 @@
         function init() {
             camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, .3, 2000);
             scene = new THREE.Scene();
-            scene.fog = new THREE.Fog(0xffffff, 0, 750);
-            var light = new THREE.HemisphereLight(0xeeeeff, 0x777788, 0.75);
-            light.position.set(0.5, 1, 0.75);
-            scene.add(light);
             controls = new THREE.PointerLockControls(camera);
             controls.getObject().translateX( -200 );
             controls.getObject().translateY( 4000 );
@@ -147,10 +143,10 @@
             loader.load('Lato_Black_Regular.json', function (font) {
                 var xMid, text;
                 var color = 0x006699;
-                var matDark = new THREE.LineBasicMaterial({
-                    color: color,
-                    side: THREE.DoubleSide
-                });
+                // var matDark = new THREE.LineBasicMaterial({
+                //     color: color,
+                //     side: THREE.DoubleSide
+                // });
                 var matLite = new THREE.MeshBasicMaterial({
                     color: color,
                     transparent: true,
