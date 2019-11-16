@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>three.js - pointerlock controls</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background-color: black;
+            margin: 0;
+            overflow: hidden;
+            font-family: arial;
+        }
+
+        #blocker {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            display: -webkit-box;
+            display: -moz-box;
+            display: box;
+            -webkit-box-orient: horizontal;
+            -moz-box-orient: horizontal;
+            box-orient: horizontal;
+            -webkit-box-pack: center;
+            -moz-box-pack: center;
+            box-pack: center;
+            -webkit-box-align: center;
+            -moz-box-align: center;
+            box-align: center;
+            color: #ffffff;
+            text-align: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://threejs.org/build/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/libs/stats.min.js"></script>
+    <script src="https://threejs.org/examples/js/controls/PointerLockControls.js"></script>
+    <div id="blocker">
+
+        <div id="container">
+            <span style="font-size:40px">Click to start</span>
+            <br />
+
+        </div>
+
+    </div>
+
+    <script>
+        var camera, scene, renderer;
+        var geometry, material, mesh;
+        var controls;
+        var objects = [];
+        var raycaster;
+        var blocker = document.getElementById('blocker');
+        var container = document.getElementById('container');
+        var content = "ed_status	tweet_quoted_status_id	tweet_quoted_status_id_str	tweet_retweet_count	tweet_retweeted	tweet_source	tweet_truncated	tweet_user	user_contributors_enabled	user_created_at	user_default_profile	user_default_profile_image	user_description	user_entities	user_favourites_count	user_follow_request_sent	user_followers_count	user_following	user_friends_count	user_geo_enabled	user_has_extended_profile	user_id	user_id_str	user_is_translation_enabled	user_is_translator	user_lang	user_listed_count	user_location	user_name	user_notifications	user_profile_background_color	user_profile_background_image_url	user_profile_background_image_url_https	user_profile_background_tile	user_profile_banner_url	user_profile_image_url	user_profile_image_url_https	user_profile_link_color	user_profile_sidebar_border_color	user_profile_sidebar_fill_color	user_profile_text_color	user_profile_use_background_image	user_protected	user_screen_name	user_statuses_count	user_time_zone	user_translator_typ user_url user_utc_offset	user_verified 0	NaN	NaN	Fri Sep 07 16:25:06 +0000 2018	[0, 75]	{'hashtags': [{'text': 'quote', 'indices': [47, 53]}, {'text': 'motivation', 'indices': [54, 65]}, {'text': 'justdoit', 'indices': [66, 75]}], 'symbols': [], 'user_mentions': [], 'urls': [], 'media': [{'id': 1038100853872197632, 'id_str': '1038100853872197632', 'indices': [76...	{'media': [{'id': 1038100853872197632, 'id_str': '1038100853872197632', 'indices': [76, 99], 'media_url': 'http://pbs.twimg.com/media/DmgTOfwVAAAJqoh.jpg', 'media_url_https': 'https://pbs.twimg.com/media/DmgTOfwVAAAJqoh.jpg', 'url': 'https://t.co/J9lLdszdW6', 'display_url': '...	0	False	Done is better than perfect. — Sheryl Sandberg #quote #motivation #justdoit https://t.co/J9lLdszdW6	NaN	1038100857932394496	1038100857932394496	NaN	NaN	NaN	NaN	NaN	False	en	{'iso_language_code': 'en', 'result_type': 'recent'}	NaN	False	NaN	NaN	NaN	0	False	<a href=https://statusbrew.com rel=nofollow>Statusbrew</a>	False	{'id': 3188618684, 'id_str': '3188618684', 'name': 'Ultra YOU Woman', 'screen_name': 'UltraYOUwoman', 'location': 'California, USA', 'description': 'I share tips to achieve your health goals and be your best self inside & out! Plus healthy living, weight loss success stories,...	False	Fri May 08 10:27:51 +0000 2015	True	False	I share tips to achieve your health goals and be your best self inside & out! Plus healthy living, weight loss success stories, skincare & post-birth snap back!	{'url': {'urls': [{'url': 'https://t.co/jGlJswxjwS', 'expanded_url': 'https://about.me/ultrayouwoman', 'display_url': 'about.me/ultrayouwoman', 'indices': [0, 23]}]}, 'description': {'urls': []}}	307.0	False	57983.0	False	48721.0	False	False	3.188619e+09	3.188619e+09	False	False	en	629.0	California, USA	Ultra YOU Woman	False	C0DEED	http://abs.twimg.com/images/themes/theme1/bg.png	https://abs.twimg.com/images/themes/theme1/bg.png	False	https://pbs.twimg.com/profile_banners/3188618684/1431170427	http://pbs.twimg.com/profile_images/597000926272954368/eQ-8VrVk_normal.jpg	https://pbs.twimg.com/profile_images/597000926272954368/eQ-8VrVk_normal.jpg	1DA1F2	C0DEED	DDEEF6	333333	True	False	UltraYOUwoman	91870.0	NaN	none	https://t.co/jGlJswxjwS	NaN	False 1	NaN	NaN	Fri Sep 07 16:24:59 +0000 2018	[0, 237]	{'hashtags': [{'text': 'hero', 'indices': [90, 95]}, {'text': 'fdny', 'indices': [96, 101]}, {'text': 'likesforlikes', 'indices': [102, 116]}, {'text': 'promo', 'indices': [117, 123]}, {'text': 'music', 'indices': [124, 130]}, {'text': 'instagood', 'indices': [131, 141]}, {'t...	NaN	0	False	Shout out to the Great Fire Department and the tour! 👨‍🚒👨‍🚒 Much love to NYC! 💯🎥🔥✊🏿\n•\n•\n•\n#hero #fdny #likesforlikes #promo #music #instagood #instadaily #postoftheday #bestoftheday #justdoit #nike #picoftheday... https://t.co/sFobQ2ukpo	NaN	1038100830807904256	1038100830807904256	NaN	NaN	NaN	NaN	NaN	False	en	{'iso_language_code': 'en', 'result_type': 'recent'}	NaN	False	NaN	NaN	NaN	0	False	<a href=http://www.facebook.com/twitter rel=nofollow>Facebook</a>	False	{'id': 18387174, 'id_str': '18387174', 'name': 'Yung Cut Up (Videos)', 'screen_name': 'yungcutup', 'location': 'Miami, Florida', 'description': 'All Business inquiries contact cluuxx@gmail.com / Support & Download my new mixtape Clear Skies https://t.co/0tOeBuJHHH', 'url': ...	False	Fri Dec 26 09:30:23 +0000 2008	False	False	All Business inquiries contact cluuxx@gmail.com / Support & Download my new mixtape Clear Skies https://t.co/0tOeBuJHHH	{'url': {'urls': [{'url': 'http://t.co/lVm8vfDbfO', 'expanded_url': 'http://youtube.com/yungcutuptv', 'display_url': 'youtube.com/yungcutuptv', 'indices': [0, 22]}]}, 'description': {'urls': [{'url': 'https://t.co/0tOeBuJHHH', 'expanded_url': 'http://piff.me/6613310', 'displa...	1178.0	False	13241.0	False	5489.0	False	False	1.838717e+07	1.838717e+07	False	False	en	150.0	Miami, Florida	Yung Cut Up (Videos)	False	131516	http://abs.twimg.com/images/themes/theme14/bg.gif	https://abs.twimg.com/images/themes/theme14/bg.gif	True	https://pbs.twimg.com/profile_banners/18387174/1488819752	http://pbs.twimg.com/profile_images/945333114582298625/C8zA_uvh_normal.jpg	https://pbs.twimg.com/profile_images/945333114582298625/C8zA_uvh_normal.jpg	3B94D9	FFFFFF	EFEFEF	333333	True	False	yungcutup	618822.0	NaN	none	http://t.co/lVm8vfDbfO	NaN	False 2	NaN	NaN	Fri Sep 07 16:24:50 +0000 2018	[0, 176]	{'hashtags': [{'text': 'JustDoIt', 'indices': [127, 136]}, {'text': '4YourMorning', 'indices': [137, 150]}, {'text': '4YourMemeCollection', 'indices': [151, 171]}], 'symbols': [], 'user_mentions': [], 'urls': [], 'media': [{'id': 1038100773396041728, 'id_str': '10381007733960...	{'media': [{'id': 1038100773396041728, 'id_str': '1038100773396041728', 'indices': [177, 200], 'media_url': 'http://pbs.twimg.com/media/DmgTJz9UUAA57tu.jpg', 'media_url_https': 'https://pbs.twimg.com/media/DmgTJz9UUAA57tu.jpg', 'url': 'https://t.co/6ok9qR6k6M', 'display_url':...	0	False	There are some AMAZINGLY hilarious Nike Ad memes happening on my newsfeed. Soooo, I decided to get a little creative too... \n\n#JustDoIt #4YourMorning #4YourMemeCollection \n\n🍪😂 https://t.co/6ok9qR6k6M	NaN	1038100793147248640	1038100793147248640	NaN	NaN	NaN	NaN	NaN	False	en	{'iso_language_code': 'en', 'result_type': 'recent'}	NaN	False	NaN	NaN	NaN	0	False	<a href=http://twitter.com/download/iphone rel=nofollow>Twitter for iPhone</a>	False	{'id': 32645612, 'id_str': '32645612', 'name': 'Rachel Bogle', 'screen_name': 'rachelbogle', 'location': 'Indianapolis, IN', 'description': 'Morning Traffic Reporter @CBS4Indy | Traffic Authority | Radio 📻 to TV 📺 | Indiana Raised | @IUBloomington Alum | Morkie Mom to Gizmo |...	False	Fri Apr 17 23:04:15 +0000 2009	False	False	Morning Traffic Reporter @CBS4Indy | Traffic Authority | Radio 📻 to TV 📺 | Indiana Raised | @IUBloomington Alum | Morkie Mom to Gizmo | Ms. USA Universal 2018	{'url': {'urls': [{'url': 'https://t.co/g9exqgZp9x', 'expanded_url': 'http://www.cbs4indy.com', 'display_url': 'cbs4indy.com', 'indices': [0, 23]}]}, 'description': {'urls': []}}	11864.0	False	11377.0	False	2386.0	False	False	3.264561e+07	3.264561e+07	False	False	en	193.0	Indianapolis, IN	Rachel Bogle	False	FFFAFF	http://abs.twimg.com/images/themes/theme1/bg.png	https://abs.twimg.com/images/themes/theme1/bg.png	False	https://pbs.twimg.com/profile_banners/32645612/1485823278	http://pbs.twimg.com/profile_images/986345956357615619/4zpa5kxF_normal.jpg	https://pbs.twimg.com/profile_images/986345956357615619/4zpa5kxF_normal.jpg profile_banners/18387174/1488819752	http://pbs.twimg.com/profile_images/945333114582298625/C8zA_uvh_normal.jpg	https://pbs.twimg.com/profile_images/945333114582298625/C8zA_uvh_normal.jpg	3B94D9	FFFFFF	EFEFEF	333333	True	False	yungcutup	618822.0	NaN	none	http://t.co/lVm8vfDbfO	NaN	False 2	NaN	NaN	Fri Sep 07 16:24:50 +0000 2018	[0, 176]	{'hashtags': [{'text': 'JustDoIt', 'indices': [127, 136]}, {'text': '4YourMorning', 'indices': [137, 150]}, {'text': '4YourMemeCollection', 'indices': [151, 171]}], 'symbols': [], 'user_mentions': [], 'urls': [], 'media': [{'id': 1038100773396041728, 'id_str': '10381007733960...	{'media': [{'id': 1038100773396041728, 'id_str': '1038100773396041728', 'indices': [177, 200], 'media_url': 'http://pbs.twimg.com/media/DmgTJz9UUAA57tu.jpg', 'media_url_https': 'https://pbs.twimg.com/media/DmgTJz9UUAA57tu.jpg', 'url': 'https://t.co/6ok9qR6k6M', 'display_url':...	0	False	There are some AMAZINGLY hilarious Nike Ad memes happening on my newsfeed. Soooo, I decided to get a little creative too... \n\n#JustDoIt #4YourMorning #4YourMemeCollection \n\n🍪😂 https://t.co/6ok9qR6k6M	NaN	1038100793147248640	1038100793147248640	NaN	NaN	NaN	NaN	NaN	False	en	{'iso_language_code': 'en', 'result_type': 'recent'}	NaN	False	NaN	NaN	NaN	0	False	<a href=http://twitter.com/download/iphone rel=nofollow>Twitter for iPhone</a>	False	{'id': 32645612, 'id_str': '32645612', 'name': 'Rachel Bogle', 'screen_name': 'rachelbogle', 'location': 'Indianapolis, IN', 'description': 'Morning Traffic Reporter @CBS4Indy | Traffic Authority | Radio 📻 to TV 📺 | Indiana Raised | @IUBloomington Alum | Morkie Mom to Gizmo |...	False	Fri Apr 17 23:04:15 +0000 2009	False	False	Morning Traffic Reporter @CBS4Indy | Traffic Authority | Radio 📻 to TV 📺 | Indiana Raised | @IUBloomington Alum | Morkie Mom to Gizmo | Ms. USA Universal 2018	{'url': {'urls': [{'url': 'https://t.co/g9exqgZp9x', 'expanded_url': 'http://www.cbs4indy.com', 'display_url': 'cbs4indy.com', 'indices': [0, 23]}]}, 'description': {'urls': []}}	11864.0	False	11377.0	False	2386.0	False	False	3.264561e+07	3.264561e+07	False	False	en	193.0	Indianapolis, IN	Rachel Bogle	False	FFFAFF	http://abs.twimg.com/images/themes/theme1/bg.png	https://abs.twimg.com/images/themes/theme1/bg.png	False	https://pbs.twimg.com/profile_banners/32645612/1485823278	http://pbs.twimg.com/profile_images/986345956357615619/4zpa5kxF_normal.jpg	https://pbs.twimg.com/profile_images/986345956357615619/4zpa5kxF_normal.jpg"
+        var words = content.split("");
+        // https://www.html5rocks.com/en/tutorials/pointerlock/intro/
+        var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+        if (havePointerLock) {
+            var element = document.body;
+            var pointerlockchange = function (event) {
+                if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+                    controlsEnabled = true;
+                    controls.enabled = true;
+                    blocker.style.display = 'none';
+                } else {
+                    controls.enabled = false;
+                    blocker.style.display = '-webkit-box';
+                    blocker.style.display = '-moz-box';
+                    blocker.style.display = 'box';
+                    container.style.display = '';
+                }
+            };
+            var pointerlockerror = function (event) {
+                container.style.display = '';
+            };
+            // Hook pointer lock state change events
+            document.addEventListener('pointerlockchange', pointerlockchange, false);
+            document.addEventListener('mozpointerlockchange', pointerlockchange, false);
+            document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
+            document.addEventListener('pointerlockerror', pointerlockerror, false);
+            document.addEventListener('mozpointerlockerror', pointerlockerror, false);
+            document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
+            container.addEventListener('click', function (event) {
+                container.style.display = 'none';
+                // Ask the browser to lock the pointer
+                element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+                if (/Firefox/i.test(navigator.userAgent)) {
+                    var fullscreenchange = function (event) {
+                        if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
+                            document.removeEventListener('fullscreenchange', fullscreenchange);
+                            document.removeEventListener('mozfullscreenchange', fullscreenchange);
+                            element.requestPointerLock();
+                        }
+                    };
+                    document.addEventListener('fullscreenchange', fullscreenchange, false);
+                    document.addEventListener('mozfullscreenchange', fullscreenchange, false);
+                    element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+                    element.requestFullscreen();
+                } else {
+                    element.requestPointerLock();
+                }
+            }, false);
+        } else {
+            container.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+        }
+        init();
+        animate();
+        var controlsEnabled = false;
+        var prevTime = performance.now();
+        var velocity = new THREE.Vector3();
+        function init() {
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, .3, 2000);
+            scene = new THREE.Scene();
+            controls = new THREE.PointerLockControls(camera);
+            controls.getObject().translateX( -200 );
+            controls.getObject().translateY( 4000 );
+            controls.getObject().translateZ( 4000 );
+            scene.add(controls.getObject());
+
+
+            raycaster = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, - 1, 0), 0, 10);
+
+            var loader = new THREE.FontLoader();
+            loader.load('Lato_Black_Regular.json', function (font) {
+                var xMid, text;
+                var color = 0x006699;
+                // var matDark = new THREE.LineBasicMaterial({
+                //     color: color,
+                //     side: THREE.DoubleSide
+                // });
+                var matLite = new THREE.MeshBasicMaterial({
+                    color: color,
+                    transparent: true,
+                    opacity: 0.9,
+                    side: THREE.DoubleSide
+                });
+
+                // make shape ( N.B. edge view not visible )
+                for (var i = 0; i < 1000; i++) {
+
+
+                    var message = words[i];
+                    var shapes = font.generateShapes(message, 10);
+                    var geometry = new THREE.ShapeBufferGeometry(shapes);
+                    geometry.computeBoundingBox();
+                    // xMid = - 0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+                    // geometry.translate(xMid, 0, 0);
+                    text = new THREE.Mesh(geometry, matLite);
+                    text.position.z = -Math.random() * 400;
+                    text.position.x = -Math.random() * 400;
+                    text.position.y = -Math.random() * 400;
+                    scene.add(text);
+                    // material.color.setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
+                    objects.push(text);
+
+                }
+
+
+            });
+
+            //
+            renderer = new THREE.WebGLRenderer();
+            renderer.setClearColor(808080, .4);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            //
+            window.addEventListener('resize', onWindowResize, false);
+        }
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        camera.position.z = 5;
+        camera.position.y = 100;
+        function animate() {
+            requestAnimationFrame(animate);
+
+
+            if (controlsEnabled) {
+                raycaster.ray.origin.copy(controls.getObject().position);
+                raycaster.ray.origin.y -= 10;
+                var intersections = raycaster.intersectObjects(objects);
+                var isOnObject = intersections.length > 0;
+                var time = performance.now();
+                var delta = (time - prevTime) / 1000;
+                velocity.x -= velocity.x * 10.0 * delta;
+                velocity.z -= velocity.z * 10.0 * delta;
+                velocity.y -= 9.8 * 40 * delta; // 100.0 = mass
+                objects.map(cubes => {
+                    cubes.rotation.x += Math.random() * .05;
+                    cubes.rotation.y += Math.random() * .01;
+                })
+
+                if (isOnObject === true) {
+                    velocity.y = Math.max(0, velocity.y);
+                    canJump = true;
+                }
+                controls.getObject().translateX(velocity.x * delta);
+                controls.getObject().translateY(velocity.y * delta);
+                controls.getObject().translateZ(velocity.z * delta);
+                if (controls.getObject().position.y < 10) {
+                    velocity.y = 0;
+                    controls.getObject().position.y = 10;
+                    canJump = true;
+                }
+                prevTime = time;
+            }
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+
+</html>
