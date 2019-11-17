@@ -71,11 +71,12 @@
             background: transparent;
 
         }
+
         #guessPlace {
             background: transparent;
-            margin-left:10%;
-            width:80%;
-            line-height:31px;
+            margin-left: 10%;
+            width: 80%;
+            line-height: 31px;
         }
 
         #percentage {
@@ -177,13 +178,13 @@
                     blocker.style.display = 'box';
                     container.style.display = '';
                     $("#playground").css("display", "none")
-                    if(zoomOut==false){
+                    if (zoomOut == false) {
                         $("#introduction").html("You must be frastrated now so you quit. However, this is daily life of data scientists. They swim among the data, build models to train the machine. However, the process is just like a black hole. When they fail, they don't know why they fail. There is no way to know know how to improve the accuracy or model. They just live in the black box day by day, guessing and trying, until things work.")
-               
-                    }else{
+
+                    } else {
                         $("#introduction").html("if you like it, share link with your friends!")
                     }
-                    }
+                }
             };
             var pointerlockerror = function (event) {
                 container.style.display = '';
@@ -230,7 +231,7 @@
 
                             setTimeout(function () {
                                 $("#percentage").html(" ");
-                            }, 2000);
+                            }, 1300);
                         }
 
 
@@ -309,6 +310,7 @@
             }
 
 
+            var texture2 = new THREE.TextureLoader().load('data-02.jpg');
             var texture3 = new THREE.TextureLoader().load('data.jpg');
 
             var dynamicTexture = new THREEx.DynamicTexture(500, 500)
@@ -321,8 +323,8 @@
 
             var geometry = new THREE.BoxGeometry(15, 15, 15);
             const materials = [
-                new THREE.MeshBasicMaterial({ map: dynamicTexture.texture }),
-                new THREE.MeshBasicMaterial({ map: dynamicTexture.texture }),
+                new THREE.MeshBasicMaterial({ map: texture2 }),
+                new THREE.MeshBasicMaterial({ map: texture3 }),
                 new THREE.MeshBasicMaterial({ map: texture3 }),
                 new THREE.MeshBasicMaterial({ map: texture3 }),
                 new THREE.MeshBasicMaterial({ map: texture3 }),
