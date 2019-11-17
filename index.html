@@ -35,6 +35,7 @@
             color: white;
         }
 
+
         .pink {
             color: #ff1493;
         }
@@ -68,11 +69,18 @@
         #percentage,
         #guessPlace {
             background: transparent;
+
+        }
+        #guessPlace {
+            background: transparent;
+            margin-left:10%;
+            width:80%;
+            line-height:31px;
         }
 
         #percentage {
             font-size: 150px;
-            top:0;
+            top: 0;
             position: absolute;
             width: 100%;
             text-align: center;
@@ -94,8 +102,18 @@
             -moz-box-align: center;
             box-align: center;
             color: #ffffff;
-            text-align: center;
+            text-align: left;
             cursor: pointer;
+            margin: auto 15%;
+            width: 70%;
+        }
+
+        #hint {
+            position: fixed;
+            z-index: 100;
+            top: 0;
+            right: 2em;
+            color: yellow;
         }
     </style>
 </head>
@@ -109,10 +127,11 @@
     <div id="blocker">
 
         <div id="container">
-            <span style="font-size:28px">Welcome to the database. Here you will be surrounded the datasets. Your job is
+            <span id="introduction" style="font-size:28px">Welcome to the database. Here you will be surrounded the
+                datasets. Your job is
                 to guess the right word to get the way out.<span>
                     <br /> <br />
-                    <span class="pink" style="font-size:28px">CLICK TO START! </span>
+                    <span id="click" class="pink" style="font-size:28px">CLICK TO START! </span>
                     <br />
 
         </div>
@@ -122,6 +141,7 @@
         <h1 class="blue">your prediction: </h1>
         <h1 id="guessPlace"></h1>
         <h1 class="yellow" id="percentage"></h1>
+        <p id="hint">ESC to exit</p>
     </div>
 
     <script>
@@ -137,6 +157,7 @@
         var numOfArr = 0;
         var blocker = document.getElementById('blocker');
         var container = document.getElementById('container');
+        var zoomOut = false;
 
         // https://www.html5rocks.com/en/tutorials/pointerlock/intro/
         var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
@@ -156,7 +177,13 @@
                     blocker.style.display = 'box';
                     container.style.display = '';
                     $("#playground").css("display", "none")
-                }
+                    if(zoomOut==false){
+                        $("#introduction").html("You must be frastrated now so you quit. However, this is daily life of data scientists. They swim among the data, build models to train the machine. However, the process is just like a black hole. When they fail, they don't know why they fail. There is no way to know know how to improve the accuracy or model. They just live in the black box day by day, guessing and trying, until things work.")
+               
+                    }else{
+                        $("#introduction").html("if you like it, share link with your friends!")
+                    }
+                    }
             };
             var pointerlockerror = function (event) {
                 container.style.display = '';
@@ -184,7 +211,6 @@
                         var numCorrect = 0;
                         for (i = 0; i < 6; i++) {
                             if (arrayInput[i] == guess[i]) {
-                                console.log("perfect")
                                 numCorrect++;
                             }
 
@@ -194,17 +220,26 @@
                         arrayInput = ["_", "_", "_", "_", "_", "_"];
                         $("#guessPlace").html(arrayInput.join(" ").toString());
                         // after done 
-                        $("#percentage").html(Math.floor((numCorrect / 6) * 100) + "% accurate");
-                        setTimeout(function () {
-                            $("#percentage").html(" ");
-                        }, 2000)
+
+                        if (Math.floor((numCorrect / 6) * 100) == 100) {
+                            console.log("perfect");
+                            zoomOut = true;
+
+                        } else {
+                            $("#percentage").html(Math.floor((numCorrect / 6) * 100) + "% accurate");
+
+                            setTimeout(function () {
+                                $("#percentage").html(" ");
+                            }, 2000);
+                        }
+
+
+
                     }
-
-
-
-
-
                 }
+
+
+
 
 
             });
@@ -327,25 +362,39 @@
         camera.position.z = 5;
         camera.position.y += 100;
         function animate() {
+
+
             requestAnimationFrame(animate);
 
 
             if (controlsEnabled) {
+
                 raycaster.ray.origin.copy(controls.getObject().position);
                 raycaster.ray.origin.y += 5;
                 raycaster.ray.origin.z -= 5;
                 var intersections = raycaster.intersectObjects(objects);
                 // var isOnObject = intersections.length > 0;
                 var time = performance.now();
-                scene.x += .1;
-                objects.map(cubes => {
-                    cubes.rotation.x += Math.random() * 0.06;
-                    cubes.rotation.y += Math.random() * 0.01;
-                })
+
+                if (zoomOut) {
+                    camera.position.z += 10;
+                    $(".blue").html("Welcome to future")
+                    $("#guessPlace").html("This will be the time that things are highly automated. It takes efforts and luck to get here, just like how you figured out the right word. However, no matter how hard people try, they have no idea how to tell machine what's love and morality. Not even the AI of conversation, like Siri, can reach the human level with 100% accuracy. Will the AI terminate the world or replace human? You have your answer.")
+                    $("#guessPlace").css("text-align", "left");
+                    $("#guessPlace").css("font-size", "21px");
+                } else {
+                    scene.x += .1;
+                    objects.map(cubes => {
+                        cubes.rotation.x += Math.random() * 0.06;
+                        cubes.rotation.y += Math.random() * 0.01;
+                    })
+                }
+
                 // camera.position.z -= .1;
 
                 prevTime = time;
             }
+
             renderer.render(scene, camera);
         }
     </script>
