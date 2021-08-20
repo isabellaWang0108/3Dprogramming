@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>three.js - pointerlock controls</title>
+    <title>Blackbox</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <style>
@@ -64,6 +64,10 @@
             top: 30%;
             display: none;
 
+        }
+
+        #introduction{
+            line-height: 1.8;
         }
 
         #percentage,
@@ -179,7 +183,7 @@
                     container.style.display = '';
                     $("#playground").css("display", "none")
                     if (zoomOut == false) {
-                        $("#introduction").html("You must be frastrated now so you quit. However, this is daily life of data scientists. They swim among the data, build models to train the machine. However, the process is just like a black hole. When they fail, they don't know why they fail. There is no way to know know how to improve the accuracy or model. They just live in the black box day by day, guessing and trying, until things work.")
+                        $("#introduction").html("You just experienced an analogy of the black box concept in machine learning: There is an input, there is output, but what happens in between is a mystery. Maybe now you can see how ML becomes controversial when it comes to making decisions for humans. We can't just accept the result from the black box model. All the implemented algorithm needs to be explainable!")
 
                     } else {
                         console.log("hi")
@@ -304,12 +308,7 @@
 
             // objects
             geometry = new THREE.BoxGeometry(20, 20, 20);
-            for (var i = 0, l = geometry.faces.length; i < l; i++) {
-                var face = geometry.faces[i];
-                face.vertexColors[0] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-                face.vertexColors[1] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-                face.vertexColors[2] = new THREE.Color().setHSL(Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75);
-            }
+            
 
 
             var texture2 = new THREE.TextureLoader().load('data-02.jpg');
