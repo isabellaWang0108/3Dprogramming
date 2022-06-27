@@ -1,5 +1,4 @@
 # 3D frontend programming using Three.js
-
-This is one of my Thesis projects exploring What will we become, now that life means living with computers? This is an experience for non-technical people to experience a data scientist's job: While they do Machine learning, they never know what’s next, why the algorithm failed, when they can beat accuracy records. Once you open the link, you will be in a set of data. Your job is to guess the combination of the letters that functions as commands to make sense of the data points. 
+This piece is an ethical statement about machine learning. It is an interactive piece that personally brings audiences to experience the traditional problem-solving process in the computing system. It reflects the black box issue and hopes people will walk away thinking critically about AI's reliability.
 
 [Try it!](https://isabellaWang0108.github.io/3Dprogramming/)
