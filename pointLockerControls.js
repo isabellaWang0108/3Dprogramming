@@ -166,7 +166,6 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
         }
 
         THREE.PointerLockControls = PointerLockControls;
-console.log()
     })();
 
 
