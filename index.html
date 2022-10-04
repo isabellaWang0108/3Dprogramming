@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <title>Blackbox</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <style>
+    <head>
+        <title>Blackbox</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no,
+            minimum-scale=1.0, maximum-scale=1.0">
+        <style>
         @font-face {
             font-family: 'Menlo';
             src: url('Menlo.ttc') format('truetype');
@@ -121,36 +122,38 @@
             color: yellow;
         }
     </style>
-</head>
+    </head>
 
-<body>
-    <script src="https://threejs.org/build/three.min.js"></script>
-    <script src="https://threejs.org/examples/js/libs/stats.min.js"></script>
-    <script src="https://threejs.org/examples/js/controls/PointerLockControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="dynamicTexture.js"></script>
-    <div id="blocker">
+    <body>
+        <script src="https://threejs.org/build/three.min.js"></script>
+        <script src="https://threejs.org/examples/js/libs/stats.min.js"></script>
+        <script type="module" src="./pointLockerControls.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="dynamicTexture.js"></script>
+        <div id="blocker">
 
-        <div id="container">
-            <span id="introduction" style="font-size:28px">Welcome to the database. Here you will be surrounded by the
-                datasets. Your job is
-                to guess the right word to get the way out.<span>
-                    <br /> <br />
-                    <span id="click" class="pink" style="font-size:28px">CLICK TO START! </span>
-                    <br />
+            <div id="container">
+                <span id="introduction" style="font-size:28px">Welcome to the
+                    database. Here you will be surrounded by the
+                    datasets. Your job is
+                    to guess the right word to get the way out.<span>
+                        <br /> <br />
+                        <span id="click" class="pink" style="font-size:28px">CLICK
+                            TO START! </span>
+                        <br />
 
-        </div>
+                    </div>
 
-    </div>
-    <div id="playground">
-        <h1 class="blue">your prediction: </h1>
-        <h1 id="guessPlace"></h1>
-        <h1 class="yellow" id="percentage"></h1>
-        <p id="hint">ESC to exit</p>
-    </div>
+                </div>
+                <div id="playground">
+                    <h1 class="blue">your prediction: </h1>
+                    <h1 id="guessPlace"></h1>
+                    <h1 class="yellow" id="percentage"></h1>
+                    <p id="hint">ESC to exit</p>
+                </div>
 
-    <script>
-
+                <script type="module">
 
         var camera, scene, renderer;
         var geometry, material, mesh;
@@ -163,7 +166,7 @@
         var blocker = document.getElementById('blocker');
         var container = document.getElementById('container');
         var zoomOut = false;
-
+ 
         // https://www.html5rocks.com/en/tutorials/pointerlock/intro/
         var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
@@ -174,7 +177,6 @@
                     controlsEnabled = true;
                     controls.enabled = true;
                     blocker.style.display = 'none';
-
                 } else {
                     controls.enabled = false;
                     blocker.style.display = '-webkit-box';
@@ -264,6 +266,7 @@
             container.addEventListener('click', function (event) {
                 container.style.display = 'none';
                 $("#playground").css("display", "block")
+                
                 // Ask the browser to lock the pointer
                 element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
                 if (/Firefox/i.test(navigator.userAgent)) {
@@ -293,10 +296,10 @@
         function init() {
             camera = new THREE.PerspectiveCamera(400, window.innerWidth / window.innerHeight, .1, 2000);
             scene = new THREE.Scene();
-
-            controls = new THREE.PointerLockControls(camera);
+            
+            controls  = new THREE.PointerLockControls( camera, document.body );
             scene.add(controls.getObject());
-
+            console.log('still running')
             camera.position.y += 9;
             camera.position.z -= 2;
 
@@ -371,7 +374,6 @@
 
 
             if (controlsEnabled) {
-
                 raycaster.ray.origin.copy(controls.getObject().position);
                 raycaster.ray.origin.y += 5;
                 raycaster.ray.origin.z -= 5;
@@ -401,6 +403,6 @@
             renderer.render(scene, camera);
         }
     </script>
-</body>
+            </body>
 
-</html>
+        </html>
